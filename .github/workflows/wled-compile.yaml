@@ -51,10 +51,18 @@ jobs:
     - name: Prepare Binary
       run: |
         WLEDFOLDERNAME=`cat /tmp/WLEDtemp/wledfoldername`
+        BUILDDIR="${WLEDFOLDERNAME}/.pio/build/custom_build"
         OUTPUT_FILENAME="WLED_${{ inputs.wled_version }}_C3_Custom.bin"
-        
-        cp "${WLEDFOLDERNAME}/build_output/firmware/custom_build.bin" "$GITHUB_WORKSPACE/$OUTPUT_FILENAME"
-        
+        BOOT_APP0=$(find ~/.platformio -name "boot_app0.bin" | head -1)
+
+        esptool.py --chip esp32c3 merge_bin \
+          --fill-flash-size 4MB \
+          -o "$GITHUB_WORKSPACE/$OUTPUT_FILENAME" \
+          0x0     "${BUILDDIR}/bootloader.bin" \
+          0x8000  "${BUILDDIR}/partitions.bin" \
+          0xe000  "${BOOT_APP0}" \
+          0x10000 "${WLEDFOLDERNAME}/build_output/firmware/custom_build.bin"
+
         echo "FIRMWARE_NAME=$OUTPUT_FILENAME" >> $GITHUB_ENV
         echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
