@@ -1,17 +1,22 @@
 # WLED Build For SP530E  
 Prepare UART Converter  
-Download WLED_0.xx.x_C3_Custom.bin at Release page  
+Download `WLED_16.x.x_C3_Custom.bin` at Release page  
 Download ESPtool [Here](https://github.com/espressif/esptool/releases)  
-Download C3_bootloader.bin and C3_partitions_4M.bin [Here](https://github.com/Aircoookie/WLED/releases/tag/v0.15.0-b2)  
-  
-  
+
+> The release binary already includes bootloader and partition table.  
+> No need to download them separately.
+
 ## Connect UART Cable to board reverse side  
 ## Use this Command below to backup the original firmware.  
-esptool read_flash 0 0x400000 sp530e-encrypted.bin  
+```
+esptool read_flash 0 0x400000 sp530e-encrypted.bin
+```
 
-##  Use this Command below to flash the custom firmware.
-###  Please replace `0.xx.x` in the command below with the actual version number you downloaded (e.g., `0.15.3`)    
-esptool write_flash --encrypt 0x0 C3_bootloader.bin 0x8000 C3_partitions_4M.bin 0x10000 WLED_0.xx.x_C3_Custom.bin  
+## Use this Command below to flash the custom firmware.
+### Please replace `16.x.x` with the actual version number you downloaded (e.g., `16.0.0`)
+```
+esptool write_flash --encrypt 0x0 WLED_16.x.x_C3_Custom.bin
+```
 
 ## I/O Pins:  
 On Board Button GPIO 8  
