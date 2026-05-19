@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       wled_version:
-        description: 'WLED Version (e.g. 0.15.3)'
+        description: 'WLED Version (e.g. 16.0.0)'
         required: true
-        default: '0.15.3'
+        default: '16.0.0'
 
 permissions:
   contents: write
