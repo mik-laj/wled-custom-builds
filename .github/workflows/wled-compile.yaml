@@ -25,7 +25,7 @@ jobs:
     - name: Install PlatformIO
       run: |
         python -m pip install --upgrade pip
-        pip install --upgrade platformio
+        pip install --upgrade platformio esptool
         
     - name: Set up Node.js
       uses: actions/setup-node@v4
