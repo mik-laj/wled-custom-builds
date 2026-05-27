@@ -24,54 +24,29 @@ jobs:
 
     - name: Install PlatformIO
       run: |
-        python -m pip install --upgrade pip
-        pip install --upgrade platformio esptool
+        make install-tools
 
     - name: Set up Node.js
       uses: actions/setup-node@v6
       with:
         node-version: 24
 
-    - name: Run PlatformIO
+    - name: Prepare environment
       run: |
-        rm -rf /tmp/WLEDtemp/* || true
-        mkdir -p /tmp/WLEDtemp
-        wget https://api.github.com/repos/wled/WLED/zipball/v${{ inputs.wled_version }} -O /tmp/WLEDtemp/mm.zip
-        unzip /tmp/WLEDtemp/mm.zip -d /tmp/WLEDtemp
-        find /tmp/WLEDtemp -maxdepth 1 -mindepth 1 -name "*" -type d >> /tmp/WLEDtemp/wledfoldername
-        cd `cat /tmp/WLEDtemp/wledfoldername`
-        npm install
-
-        echo '[env:custom_build]' >>platformio.ini
-        echo 'extends = env:esp32c3dev' >>platformio.ini
-
-        echo 'build_flags = ${env:esp32c3dev.build_flags} -D BTNPIN=8 -D ARDUINO_USB_CDC_ON_BOOT=0' >>platformio.ini
-        echo 'build_unflags= -D WLED_RELEASE_NAME -D ARDUINO_USB_CDC_ON_BOOT' >>platformio.ini
-
-        pio run -e custom_build || pio run -e custom_build
+        make prepare
 
     - name: Prepare Binary
       run: |
-        WLEDFOLDERNAME=`cat /tmp/WLEDtemp/wledfoldername`
-        BUILDDIR="${WLEDFOLDERNAME}/.pio/build/custom_build"
-        OUTPUT_FILENAME="WLED_${{ inputs.wled_version }}_C3_Custom.bin"
-        BOOT_APP0=$(find ~/.platformio -name "boot_app0.bin" | head -1)
+        make build
 
-        esptool --chip esp32c3 merge-bin \
-          --pad-to-size 4MB \
-          -o "$GITHUB_WORKSPACE/$OUTPUT_FILENAME" \
-          0x0     "${BUILDDIR}/bootloader.bin" \
-          0x8000  "${BUILDDIR}/partitions.bin" \
-          0xe000  "${BOOT_APP0}" \
-          0x10000 "${WLEDFOLDERNAME}/build_output/firmware/custom_build.bin"
-
-        echo "FIRMWARE_NAME=$OUTPUT_FILENAME" >> $GITHUB_ENV
-        echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Prepare Firmware
+      run: |
+        make firmware
 
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
-        tag_name: v${{ inputs.wled_version }}-c3-${{ env.DATE }}
+        tag_name: v${{ inputs.wled_version }}
         name: WLED ${{ inputs.wled_version }} for SP530E
 
         body: |
@@ -80,5 +55,5 @@ jobs:
           - **Chip:** ESP32-C3
           - **USB CDC:** 0
 
-        files: ${{ github.workspace }}/${{ env.FIRMWARE_NAME }}
+        files: ${{ github.workspace }}/build_output/firmware/sp530e.bin
         fail_on_unmatched_files: true
