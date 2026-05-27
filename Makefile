@@ -55,7 +55,9 @@ $(WLED_DIR)/platformio.ini:
 	wget "https://codeload.github.com/wled/WLED/tar.gz/refs/tags/v$(WLED_VERSION)" -O "/tmp/wled.tar.gz"
 	tar -xzf "/tmp/wled.tar.gz" --strip-components=1 -C "$(WLED_DIR)"
 	rm -f "/tmp/wled.tar.gz"
-	cd "$(WLED_DIR)" && npm install
+	[[ -f "$(OVERRIDE_FILE)" ]] || { echo "Error: $(OVERRIDE_FILE) not found"; exit 1; }
+	cp "$(OVERRIDE_FILE)" "$(WLED_DIR)/platformio_override.ini"
+	echo "Copied override file to $(WLED_DIR)/platformio_override.ini"
 
 build: install-tools prepare $(BUILD_BIN_DIR)/sp530e.bin
 

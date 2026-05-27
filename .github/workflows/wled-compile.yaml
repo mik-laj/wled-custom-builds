@@ -38,10 +38,12 @@ jobs:
     - name: Prepare Binary
       run: |
         make build
+        ls -lah build_output/firmware/
 
     - name: Prepare Firmware
       run: |
         make firmware
+        ls -lah build_output/firmware/
 
     - name: Create Release
       uses: softprops/action-gh-release@v3
@@ -55,5 +57,5 @@ jobs:
           - **Chip:** ESP32-C3
           - **USB CDC:** 0
 
-        files: ${{ github.workspace }}/build_output/firmware/sp530e.bin
+        files: ${{ github.workspace }}/build_output/firmware/WLED_16.0.0_sp530e.bin
         fail_on_unmatched_files: true
