@@ -57,5 +57,5 @@ jobs:
           - **Chip:** ESP32-C3
           - **USB CDC:** 0
 
-        files: ${{ github.workspace }}/build_output/firmware/WLED_16.0.0_sp530e.bin
+        files: build_output/firmware/*.bin
         fail_on_unmatched_files: true
