@@ -33,7 +33,7 @@ help:
 	@echo "  install-tools - Install/upgrade pip, platformio and esptool in venv"
 	@echo "  prepare  - Download and prepare WLED sources (skip if already present)"
 	@echo "  build    - Compile env:sp530e and copy generated .bin files into build_output/build"
-	@echo "  firmware - Merge final binary into build_output/firmware/$(OUTPUT_FILENAME)"
+	@echo "  firmware - Merge final binary into build_output/firmware/"
 	@echo "  clean    - Remove venv, downloaded sources, and generated output files"
 
 venv: $(VENV_PYTHON)
