@@ -38,7 +38,7 @@ jobs:
     - name: Prepare Binary
       run: |
         make build
-        ls -lah build_output/firmware/
+        ls -lah build_output/build/
 
     - name: Prepare Firmware
       run: |

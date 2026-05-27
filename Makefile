@@ -15,7 +15,7 @@ BUILD_BIN_DIR := $(BUILD_OUTPUT_ROOT)/build
 FIRMWARE_OUTPUT_DIR := $(BUILD_OUTPUT_ROOT)/firmware
 
 OUTPUT_FILENAME := WLED_$(WLED_VERSION)_sp530e.bin
-OUTPUT_PATH := $(FIRMWARE_OUTPUT_DIR)/$(OUTPUT_FILENAME)
+FIRMWARE_PATH := $(FIRMWARE_OUTPUT_DIR)/$(OUTPUT_FILENAME)
 PIO_BUILD_DIR := $(WLED_DIR)/.pio/build/sp530e
 
 OVERRIDE_FILE := $(CURDIR)/platformio_override.ini
@@ -70,21 +70,21 @@ $(BUILD_BIN_DIR)/sp530e.bin: prepare
 	cp "$(WLED_DIR)/build_output/firmware/sp530e.bin" "$(BUILD_BIN_DIR)/sp530e.bin"
 	echo "Copied build .bin files to $(BUILD_BIN_DIR)"
 
-firmware: $(OUTPUT_PATH)
+firmware: $(FIRMWARE_PATH)
 
-$(OUTPUT_PATH): $(BUILD_BIN_DIR)/sp530e.bin
+$(FIRMWARE_PATH): $(BUILD_BIN_DIR)/sp530e.bin
 	BUILDDIR="$(PIO_BUILD_DIR)"; \
 	BOOT_APP0="$$(find ~/.platformio -name boot_app0.bin | head -1)"; \
 	[[ -n "$$BOOT_APP0" ]] || { echo "Error: boot_app0.bin not found under ~/.platformio"; exit 1; }; \
 	mkdir -p "$(FIRMWARE_OUTPUT_DIR)"; \
 	"$(ESPTOOL)" --chip esp32c3 merge-bin \
 		--pad-to-size 4MB \
-		-o "$(OUTPUT_PATH)" \
+		-o "$(FIRMWARE_PATH)" \
 		0x0 "$$BUILDDIR/bootloader.bin" \
 		0x8000 "$$BUILDDIR/partitions.bin" \
 		0xe000 "$$BOOT_APP0" \
 		0x10000 "$(BUILD_BIN_DIR)/sp530e.bin"
-	@echo "Done: $(OUTPUT_PATH)"
+	@echo "Done: $(FIRMWARE_PATH)"
 
 clean:
 	rm -rf "$(VENV_DIR)" "$(WLED_DIR)" "$(BUILD_OUTPUT_ROOT)"
