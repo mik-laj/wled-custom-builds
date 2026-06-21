@@ -36,14 +36,7 @@ jobs:
         make prepare
 
     - name: Prepare Binary
-      run: |
-        make build
-        ls -lah build_output/build/
-
-    - name: Prepare Firmware
-      run: |
-        make firmware
-        ls -lah build_output/firmware/
+      run: make build
 
     - name: Create Release
       uses: softprops/action-gh-release@v3
@@ -57,5 +50,5 @@ jobs:
           - **Chip:** ESP32-C3
           - **USB CDC:** 0
 
-        files: build_output/firmware/*.bin
+        files: build_output/*.bin
         fail_on_unmatched_files: true
