@@ -49,11 +49,11 @@ $(WLED_DIR)/platformio.ini:
 	rm -f "/tmp/wled.tar.gz"
 
 build: install-tools prepare 
-# 	cp "$(OVERRIDE_FILE)" "$(WLED_DIR)/platformio_override.ini"
-# 	echo "Copied override file to $(WLED_DIR)/platformio_override.ini"
+	cp "$(OVERRIDE_FILE)" "$(WLED_DIR)/platformio_override.ini"
+	echo "Copied override file to $(WLED_DIR)/platformio_override.ini"
 
-# 	cd "$(WLED_DIR)" && "$(PIO)" run --target clean
-# 	cd "$(WLED_DIR)" && "$(PIO)" run
+	cd "$(WLED_DIR)" && "$(PIO)" run --target clean
+	cd "$(WLED_DIR)" && "$(PIO)" run
 	
 	mkdir -p "$(BUILD_OUTPUT_ROOT)"
 	cp "$(WLED_DIR)/build_output/release/"* "$(BUILD_OUTPUT_ROOT)/"
