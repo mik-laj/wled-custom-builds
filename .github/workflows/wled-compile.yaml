@@ -40,7 +40,9 @@ jobs:
 
     - name: Prepare Binary
       run: make build
-
+    - run: |
+        mv build_output/WLED_16.0.0_MY_ESP32.bin build_output/KITTY_CORP_16.0.0_MY_ESP32.bin
+        mv build_output/WLED_16.0.0_MY_ESP32_full.bin build_output/KITTY_CORP_16.0.0_MY_ESP32_full.bin
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
