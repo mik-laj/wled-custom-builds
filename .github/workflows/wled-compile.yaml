@@ -35,14 +35,17 @@ jobs:
       env:
         WLED_VERSION: ${{ inputs.wled_version }}
       run: |
-        make prepare WLED_VERSION=16.0.0
+        make prepare WLED_VERSION="$WLED_VERSION"
         jq --arg version "$WLED_VERSION" '.version = $version' wled-src/package.json > temp.json && mv temp.json wled-src/package.json
 
     - name: Prepare Binary
       run: make build
-    - run: |
-        mv build_output/WLED_16.0.0_MY_ESP32.bin build_output/KITTY_CORP_16.0.0_MY_ESP32.bin
-        mv build_output/WLED_16.0.0_MY_ESP32_full.bin build_output/KITTY_CORP_16.0.0_MY_ESP32_full.bin
+    - name: Rename binary outputs
+      env:
+        WLED_VERSION: ${{ inputs.wled_version }}
+      run: |
+        mv "build_output/WLED_${WLED_VERSION}_MY_ESP32.bin" "build_output/KITTY_CORP_${WLED_VERSION}_MY_ESP32.bin"
+        mv "build_output/WLED_${WLED_VERSION}_MY_ESP32_full.bin" "build_output/KITTY_CORP_${WLED_VERSION}_MY_ESP32_full.bin"
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
