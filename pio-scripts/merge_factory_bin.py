@@ -36,8 +36,8 @@ def _resolve_esptool_py(platform):
 
 def merge_factory_bin(source, target, env):
     board = env.BoardConfig()
-    mcu = str(board.get("build.mcu", "esp32c3"))
-    flash_size = board.get("upload.flash_size", "4MB")
+    mcu = str(board.get("build.mcu"))
+    flash_size = board.get("upload.flash_size")
 
     build_dir = Path(env.subst("$BUILD_DIR"))
     project_dir = Path(env.subst("$PROJECT_DIR"))
@@ -95,6 +95,7 @@ def merge_factory_bin(source, target, env):
         "0x10000",
         str(app_bin),
     ]
+    print(f"[factory-bin] Running command: {' '.join(cmd)}")
  
     print(f"[factory-bin] Merging firmware image into {output_file}")
     subprocess.run(cmd, check=True, cwd=str(project_dir))
