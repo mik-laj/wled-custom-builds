@@ -47,7 +47,6 @@ $(WLED_DIR)/platformio.ini:
 	wget "https://codeload.github.com/wled/WLED/tar.gz/refs/tags/v$(WLED_VERSION)" -O "/tmp/wled.tar.gz"
 	tar -xzf "/tmp/wled.tar.gz" --strip-components=1 -C "$(WLED_DIR)"
 	rm -f "/tmp/wled.tar.gz"
-	sed -i 's/16.0.0/16.0.0-custom1/g' wled-src/package.json
 
 build: install-tools prepare 
 	cp "$(OVERRIDE_FILE)" "$(WLED_DIR)/platformio_override.ini"

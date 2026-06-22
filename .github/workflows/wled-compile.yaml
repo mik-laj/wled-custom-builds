@@ -32,8 +32,11 @@ jobs:
         node-version: 24
 
     - name: Prepare environment
+      env:
+        WLED_VERSION: ${{ inputs.wled_version }}
       run: |
         make prepare
+        jq --arg version "$WLED_VERSION" '.version = $version' wled-src/package.json > temp.json && mv temp.json wled-src/package.json
 
     - name: Prepare Binary
       run: make build
